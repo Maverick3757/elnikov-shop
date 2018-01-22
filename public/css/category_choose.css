@@ -1,0 +1,13 @@
+.category-choose .category-image{
+    border: 1px solid #dbdbdb;
+    padding: 9px;
+    position: relative;
+    background: white;
+    margin-bottom: 9px;
+    align-items: center;
+    height: 135px;
+}
+.category-choose>li{
+    padding-right: 15px;
+    padding-left: 15px;
+}
