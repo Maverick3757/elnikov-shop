@@ -47,28 +47,71 @@ class MainController extends Controller
         $html['data'] = View::make('test', ['data' => $data])->render();
         return response()->json($html);
     }
-
+    public function product($brand_name,$model_name,$product_name,$product_data,$category_id,$package_id)
+    {
+        //dump($product_data);
+        //dump($category_id);
+        //dump($package_id);
+        $visible_block = array('breadcrumbs');
+        return view('welcome', [
+            'cars' => $product_data,
+            'content'=>'product',
+            'css'=>'product',
+            'visible_block'=>$visible_block]
+        );
+    }
     public function test($brand_name,$model_data)
     {
-        return view('welcome', ['cars' => $model_data, 'content'=>'cars_engine','css'=>'package_choose']);
+        $visible_block = array('breadcrumbs','side_menu');
+        return view('welcome', [
+            'cars' => $model_data,
+            'content'=>'cars_engine',
+            'css'=>'package_choose',
+            'visible_block'=>$visible_block]
+        );
     }
     public function test2($brand_data)
     {
-        return view('welcome', ['cars' => $brand_data, 'content'=>'cars_models','css'=>'model_choose']);
+        $visible_block = array('breadcrumbs','side_menu');
+        return view('welcome', [
+            'cars' => $brand_data,
+            'content'=>'cars_models',
+            'css'=>'model_choose',
+            'visible_block'=>$visible_block]
+        );
     }
 
     public function test3ByPack($brand_name, $model_name, $categories_data)
     {
-        return view('welcome', ['cars' => $categories_data, 'content'=>'cars_category','css'=>'category_choose']);
+
+        $visible_block = array('breadcrumbs','side_menu');
+        return view('welcome', [
+            'cars' => $categories_data,
+            'content'=>'cars_category',
+            'css'=>'category_choose',
+            'visible_block'=>$visible_block]
+        );
     }
 
     public function test3($brand_name, $model_name,$i, $categories_data)
     {
-        return view('welcome', ['cars' => $categories_data, 'content'=>'cars_category','css'=>'category_choose']);
+        $visible_block = array('breadcrumbs','side_menu');
+        return view('welcome', [
+            'cars' => $categories_data,
+            'content'=>'cars_category',
+            'css'=>'category_choose',
+            'visible_block'=>$visible_block]
+        );
     }
     public function test4($brand_name, $model_name, $engine_id,$categories_name,$products)
     {
-       return view('welcome', ['products' => $products, 'content'=>'product_list','css'=>'product_list']);
+        $visible_block = array('breadcrumbs','side_menu');
+       return view('welcome', [
+           'products' => $products,
+           'content'=>'product_list',
+           'css'=>'product_list',
+           'visible_block'=>$visible_block]
+       );
     }
     /**
      * Display the specified resource.
@@ -79,8 +122,14 @@ class MainController extends Controller
     public function show()
     {
         //
+        $visible_block = array('side_menu');
         $car_models = car_brands::modelsWithBrands()->get();
-        return view('welcome', ['cars' => $car_models,'content'=>'cars_block','css'=>'main']);
+        return view('welcome', [
+            'cars' => $car_models,
+            'content'=>'cars_block',
+            'css'=>'main',
+            'visible_block'=>$visible_block]
+        );
     }
 
     /**

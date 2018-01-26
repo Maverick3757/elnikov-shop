@@ -14,7 +14,7 @@ class Cars_to_products extends Model
     public function scopeProductsbyCars($query, $brand_name, $model_name,$engine_id,$category_id)
     {
         return $query
-            ->selectRaw('`engine_to_package`.`engine`, `car_package`.`build_years`,`car_models`.`model_name`,`car_brands`.`brand_name`,`category_to_products`.`product_id`,  `products_category`.`category_name`,IF(`currencies`.`rateToUAH`<`receives`.`rate`,tbl.`seil_price`*`receives`.`rate`,tbl.`seil_price`*`currencies`.`rateToUAH`) as seil_price,`products`.*,pic.picture_name')
+            ->selectRaw('`engine_to_package`.`engine`, `car_package`.`build_years`,`car_models`.`model_name`,`car_brands`.`brand_name`,`category_to_products`.`product_id`,  `products_category`.`category_name`, `products_category`.`id` as category_id,IF(`currencies`.`rateToUAH`<`receives`.`rate`,tbl.`seil_price`*`receives`.`rate`,tbl.`seil_price`*`currencies`.`rateToUAH`) as seil_price,`products`.*,pic.picture_name')
             ->leftJoin('category_to_products', 'category_to_products.product_id', '=', 'cars_to_products.product_id')
             ->leftJoin('engine_to_package', 'engine_to_package.id', '=', 'cars_to_products.engine_id')
             ->leftJoin('car_package', 'car_package.id', '=', 'engine_to_package.package_id')
@@ -45,7 +45,7 @@ class Cars_to_products extends Model
     public function scopeProductsbyPackage($query, $brand_name, $model_name,$package_id,$category_id)
     {
         return $query
-            ->selectRaw('`engine_to_package`.`engine`, `car_package`.`build_years`,`car_models`.`model_name`,`car_brands`.`brand_name`,`category_to_products`.`product_id`,  `products_category`.`category_name`,IF(`currencies`.`rateToUAH`<`receives`.`rate`,tbl.`seil_price`*`receives`.`rate`,tbl.`seil_price`*`currencies`.`rateToUAH`) as seil_price,`products`.*,pic.picture_name')
+            ->selectRaw('`engine_to_package`.`engine`, `car_package`.`build_years`,`car_models`.`model_name`,`car_brands`.`brand_name`,`category_to_products`.`product_id`,  `products_category`.`category_name`, `products_category`.`id` as category_id,IF(`currencies`.`rateToUAH`<`receives`.`rate`,tbl.`seil_price`*`receives`.`rate`,tbl.`seil_price`*`currencies`.`rateToUAH`) as seil_price,`products`.*,pic.picture_name')
             ->leftJoin('category_to_products', 'category_to_products.product_id', '=', 'cars_to_products.product_id')
             ->leftJoin('engine_to_package', 'engine_to_package.id', '=', 'cars_to_products.engine_id')
             ->leftJoin('car_package', 'car_package.id', '=', 'engine_to_package.package_id')
@@ -71,7 +71,7 @@ class Cars_to_products extends Model
             ->where('car_brands.brand_name',$brand_name)
             ->where('car_package.id',$package_id)
             ->where('category_to_products.category_id',$category_id)
-            ->groupBy('car_package.id');
+            ->groupBy('product_id');
     }
     public function getTranslitCategoryAttribute(){
         return $this->translit($this->attributes['category_name']);
@@ -81,7 +81,8 @@ class Cars_to_products extends Model
         return $this->attributes['brand_name'].' '.$this->attributes['model_name'].' ('.$this->attributes['build_years'].')';
     }
     public function getProductUriAttribute(){
-        return $this->translit($this->attributes['product_name']);
+        $package_id = explode('-',request()->route()->parameter("engine"))[0];
+        return '/'.$this->attributes['brand_name'].'-'.$this->attributes['model_name'].'-'.$this->translit($this->attributes['product_name']).'_'.$this->attributes['product_id'].'-'.$this->attributes['category_id'].'-'.$package_id;
     }
 
     public function getProductNameAttribute(){

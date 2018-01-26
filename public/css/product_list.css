@@ -89,7 +89,7 @@
     margin-bottom: 5px;
 }
 span.productPriceDiscount {
-    background: #19bde8;
+    background: #3178ae;
     font: 400 11px/18px "Roboto", sans-serif;
     color: white;
     padding: 2px 6px;
@@ -102,7 +102,7 @@ span.productPriceDiscount {
     display: inline-block;
 }
 .product_list .currency{
-    color: #19bde8;
+    color: #3178ae;
     font: 500 25px/40px "Roboto", sans-serif;
 }
 .product_list.list .producer{
@@ -117,7 +117,7 @@ span.productPriceDiscount {
     align-items: center;
 }
 .cartBoxTotal, .productSalePrice, .productSpecialPrice {
-    color: #19bde8;
+    color: #3178ae;
     font: 700 50px/40px "Roboto", sans-serif;
     vertical-align: middle;
 }
@@ -129,7 +129,7 @@ span.productPriceDiscount {
     padding: 0;
 }
 .product_list .product-name:hover {
-    color: #19bde8;
+    color: #3178ae;
 }
 .product_list.grid .right-block{
     padding-top: 10px;
@@ -141,4 +141,5 @@ span.productPriceDiscount {
     justify-content: center;
     height: 200px;
     left:0;
+    position: relative;
 }

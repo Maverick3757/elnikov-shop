@@ -16,7 +16,7 @@
     color: #168bb1;
 }
 .menu-block .menu-block-tittle{
-    color: #19bde8;
+    color: #3178ae;
     text-transform: uppercase;
     display: inline-block;
     padding: 0 8px 0 0;
@@ -60,7 +60,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: #19bde8;
+    background: #3178ae;
     opacity: 0;
     -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=80)';
     -webkit-transform: scaleY(0);

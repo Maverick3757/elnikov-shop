@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use App\Products_category;
+use App\Car_brands;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -17,6 +18,7 @@ class AppServiceProvider extends ServiceProvider
     {
         //
         View::share('categories', Products_category::all());
+        View::share('catalog', Car_brands::modelsWithBrands()->get());
     }
 
     /**
