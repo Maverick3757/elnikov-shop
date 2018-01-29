@@ -6,10 +6,19 @@
                     <img src="{{url('css/img/logBdl.png')}}" alt="" class="logo-img">
                 </div>
                 <div class="user">
-                    <button class="user-btn reg">Регистраця</button>
-                    <button class="user-btn auth">Вход</button>
-                    <button class="user-btn cab hidden">личный кабинет</button>
-                    <button class="user-btn hidden out">Выход</button>
+                    @if (Auth::check())
+                        <button class="user-btn cab">личный кабинет</button>
+                        <button class="user-btn out">Выход</button>
+                        <button class="user-btn reg hidden">Регистраця</button>
+                        <button class="user-btn auth hidden">Вход</button>
+                    @else
+                        <button class="user-btn cab hidden">личный кабинет</button>
+                        <button class="user-btn out hidden">Выход</button>
+                        <button class="user-btn reg">Регистраця</button>
+                        <button class="user-btn auth">Вход</button>
+                    @endif
+
+
                 </div>
                 <div class="cart">
                     <button class="cart-btn">
@@ -91,18 +100,19 @@
                     <h4 class="register-title">
                         регистрация
                     </h4>
-                    <form action="post" method="post" class="register-form">
-                        <input type="text" name="name" class="register-form_input" placeholder="Имя">
+                    <form method="post" class="register-form" onsubmit="registerUser(this,event)">
+                        {!! csrf_field() !!}
+                        <input type="text" name="name" class="register-form_input" placeholder="Имя" value="{{old('name')}}">
                         <span class="register-form_error">
                         </span>
-                        <input type="tel" name="name" class="register-form_input" placeholder="Номер телефона">
+                        <input type="tel" name="telephone" class="register-form_input" placeholder="Номер телефона" value="{{old('telephone')}}">
                         <span class="register-form_error">
                         </span>
-                        <input type="email" name="name" class="register-form_input" placeholder="Email">
-                        <input type="password" name="pass" class="register-form_input" placeholder="Пароль">
+                        <input type="email" name="email" class="register-form_input" placeholder="Email" value="{{old('email')}}">
+                        <input type="password" name="password" class="register-form_input" placeholder="Пароль">
                         <span class="register-form_error">
                         </span>
-                        <input type="password" name="pass_confir" class="register-form_input" placeholder="Пароль">
+                        <input type="password" name="password_confirmation" class="register-form_input" placeholder="Пароль">
                         <span class="register-form_error">
                         </span>
                         <button class="register-form_btn">регистрация</button>
@@ -115,11 +125,12 @@
                     <h4 class="authorization-title">
                         авторизация
                     </h4>
-                    <form action="post" method="post" class="authorization-form">
-                        <input type="tel" name="name" class="authorization-form_input" placeholder="Номер телефона">
+                    <form action="/login" method="post" class="authorization-form" onsubmit="loginUser(this,event)">
+                        {!! csrf_field() !!}
+                        <input name="telephone" class="authorization-form_input" type="telephones" pattern="\+38\([0-9]{3}\)[0-9]{3}-[0-9]{2}-[0-9]{2}" title="Ваш номер телефона" placeholder="+38(___)___-__-__" maxlength="17" value="{{old('telephone')}}">
                         <span class="authorization-form_error">
                         </span>
-                        <input type="password" name="pass" class="authorization-form_input" placeholder="Пароль">
+                        <input type="password" name="password" class="authorization-form_input" placeholder="Пароль">
                         <span class="authorization-form_error">
                         </span>
                         <button class="authorization-form_btn">авторизация</button>

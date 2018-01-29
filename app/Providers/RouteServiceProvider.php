@@ -9,6 +9,7 @@ use App\Category_to_products;
 use App\Engine_to_package;
 use App\Car_brands;
 use App\Cars_to_products;
+use App\Products;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -56,6 +57,13 @@ class RouteServiceProvider extends ServiceProvider
             $data = Car_package::modelYearsAndPackages($brand_name,$value)->get();
             return count($data)>0?$data:abort(404);
 
+        });
+
+        Route::bind('product_id',function ($product_id) {
+            $package_arr = explode('-',request()->route()->parameter("package"));
+            $package_id = $package_arr[0];
+            $category_id = request()->route()->parameter("category_id");
+            return Products::productFullInfo($package_id, $product_id, $category_id)->firstOrFail();
         });
 
          Route::bind('package_id',function ($value) {

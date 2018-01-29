@@ -11,9 +11,11 @@
         <link href="{{ url('css/'.$css.'.css') }}" rel="stylesheet" type="text/css">
         <script src="{{ url('js/lib/jquery-3.3.1.min.js') }}" type="text/javascript"></script>
         <script src="{{ url('js/lib/vendor.min.js') }}" type="text/javascript"></script>
-
+        <script src="{{url('http://slinex.in.ua/public/js/mask.js')}}" type="text/javascript"></script>
     </head>
     <body>
+        <div class="load-pop-up hidden"></div>
+        <div class="pop-up hidden"></div>
         @include('header')
         @if (in_array('breadcrumbs',$visible_block))
             @include('breadcrumbs')
@@ -27,7 +29,7 @@
                         <a href="{{ route('login') }}">Login</a>
                         <a href="{{ route('register') }}">Register</a>
                     @endauth
-                </div>pu
+                </div>
             @endif
             @if (in_array('side_menu',$visible_block))
                 @include('side_menu')
@@ -36,22 +38,77 @@
         </div>
         @include('footer')
     <script type="text/javascript">
-        $(".snav-part_toggle").click(function(){$(this).parent().next(".snav-part_info").toggle("blind",800)}),$(".footer-part_btn").click(function(){$(this).parent().parent().find(".footer-part_info").toggle("blind",800)}),$(".menu-part_hidden").click(function(){$(this).parent().find(".menu-wrap").toggle("blind",800)}),$(".menu-link_btn").click(function(){$(this).parent().find(".menu-link_info").toggle("blind",800)}),$(".cart-btn").click(function(){$(this).parent().find(".cart-info").toggle("fold",400)}),$(".cart-close").click(function(){$(this).parent().parent().toggle("fold",400)}),$(".cart-panel_add").click(function(){$(this).parent().parent().toggle("fold",400),$(".order").toggle("clip",1e3)}),$(".order-close").click(function(){$(this).parent().parent().toggle("fold",400)}),$(".order-form_btn").click(function(){$(this).parent().parent().toggle("fold",400),$(".order-messege").toggle("fold",400)}),$(".messege-content_btn").click(function(){$(this).parent().parent().toggle("fold",400)}),$(".reg").click(function(){$(".register").show("fold",400)}),$(".register-close").click(function(){$(this).parent().parent().hide("fold",400)}),$(".auth").click(function(){$(".authorization").show("fold",400)}),$(".authorization-close").click(function(){$(this).parent().parent().hide("fold",400)});
+        $(".snav-part_toggle").click(function(){
+            $(this).parent().next(".snav-part_info").toggle("blind",800)
+        }),
+        $(".footer-part_btn").click(function(){
+            $(this).parent().parent().find(".footer-part_info").toggle("blind",800)
+        }),
+        $(".menu-part_hidden").click(function(){
+            $(this).parent().find(".menu-wrap").toggle("blind",800)
+        }),
+        $(".menu-link_btn").click(function(){
+            $(this).parent().find(".menu-link_info").toggle("blind",800)
+        }),
+        $(".cart-btn").click(function(){
+            $(this).parent().find(".cart-info").toggle("fold",400)
+        }),
+        $(".cart-close").click(function(){
+            $(this).parent().parent().toggle("fold",400);
+        }),
+        $(".cart-panel_add").click(function(){
+            $('.pop-up').show();
+            $(this).parent().parent().toggle("fold",400);
+            $(".order").toggle("clip",1e3)
+        }),
+        $(".order-close").click(function(){
+            $(this).parent().parent().toggle("fold",400);
+            $('.pop-up').hide();
+        }),
+        $(".order-form_btn").click(function(){
+            $('.pop-up').show();
+            $(this).parent().parent().toggle("fold",400);
+            $(".order-messege").toggle("fold",400)
+        }),
+        $(".messege-content_btn").click(function(){
+            $(this).parent().parent().toggle("fold",400)
+        }),
+        $(".reg").click(function(){
+            $('.pop-up').show();
+            $(".register").show("fold",400)
+        }),
+        $(".register-close").click(function(){
+            $(this).parent().parent().hide("fold",400);
+            $('.pop-up').hide();
+        }),
+        $(".auth").click(function(){
+            $('.pop-up').show();
+            $(".authorization").show("fold",400)
+        }),
+        $(".authorization-close").click(function(){
+            $('.pop-up').hide();
+            $(this).parent().parent().hide("fold",400)
+        });
         jQuery.fn.extend({
+            addLoader:function(){
+                $(this).append('<div class="load-pop-up"></div>');
+            },
+            removeLoader:function(){
+               $(".load-pop-up").remove();
+            },
             addLense: function(settings){
-                var me = this;
                 $(this).mouseenter(function (event) {
                     if($('.lens-cursor').length===0) {
                         $(this).parent().append('<canvas width="'+settings.width+'" height="'+settings.height+'" class="lens-dialog"></canvas>');
-                        $(this).parent().append('<div  class="lens-cursor"></div>');
+                        $(this).parent().append('<div class="img-popup"><div  class="lens-cursor"></div></div>');
                         var $img = this;
                         var $lens_cursor = $('.lens-cursor');
                         var imgLeft = $(this).offset().left;
                         var imgTop = $(this).offset().top;
                         var imgwidth = $(this).width();
                         var imgHeight = $(this).height();
-                        $lens_cursor.width(imgwidth/4);
-                        $lens_cursor.height(imgHeight/4);
+                        $lens_cursor.width(imgwidth/3);
+                        $lens_cursor.height(imgHeight/3);
                         var curW =  $lens_cursor.width();
                         var curH = $lens_cursor.height();
                         if(imgLeft+curW/2<event.pageX  && event.pageX<imgLeft+imgwidth-curW/2){
@@ -177,10 +234,79 @@
                 });
             }
         });
-        $('.item-img_one>img').addLense({width:$('.item-info').width(),height:$('.item-info').height()});
+        $('.item-img_one>img').addLense({width:$('.item-img_one>img').width(),height:$('.item-img_one>img').height()});
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        function registerUser(form,ev){
+            ev.preventDefault();
+            var $container = $(".register");
+            $container.addLoader();
+            var $form = $(form);
+            $.ajax({
+                type: 'get',
+                url: '/register',
+                data: $form.serialize(),
+                success: function(result){
+                    $container.removeLoader();
+                    if(result.success){
+                        $container.hide("fold",400);
+                        $('.pop-up').hide();
 
+                    }else{
+                        $.each(result.data, function(i, item) {
+                            $form.find('input[name="'+i+'"]').next('span').html(item.join('<br>')).fadeOut(10000,function () {
+                                $(this).html('').show();
+                            });
+                        })
+                    }
+                }
+            });
+        }
+        function loginUser(form,ev){
+            ev.preventDefault();
+            var $container = $(".authorization");
+            $container.addLoader();
+            var $form = $(form);
+            $.ajax({
+                type: 'get',
+                url: '/login',
+                data: $form.serialize(),
+                success: function(result){
+                    $container.removeLoader();
+                    if(result.success){
+                        $('.user .user-btn').toggleClass('hidden');
+                        $container.hide("fold",400);
+                        $('.pop-up').hide();
 
-
+                    }else{
+                        $.each(result.data, function(i, item) {
+                            $form.find('input[name="'+i+'"]').next('span').html(item.join('<br>')).fadeOut(10000,function () {
+                                $(this).html('').show();
+                            })
+                        })
+                    }
+                }
+            });
+        }
+        $('.user-btn.out').click(function(){
+            $('body').addLoader();
+            $.ajax({
+                type: 'get',
+                url: '/logout',
+                success: function(result){
+                    $('body').removeLoader();
+                   if(result){
+                       $('.user .user-btn').toggleClass('hidden');
+                   }else{
+                       alert('Извините произошла ошибка!!!');
+                   }
+                }
+            });
+        });
+        $('input[type="telephones"]').mask("+38(000)000-00-00",{translation:{0:{pattern:/[0-9]/}},placeholder:"+38(___)___-__-__"})
     </script>
     </body>
 </html>

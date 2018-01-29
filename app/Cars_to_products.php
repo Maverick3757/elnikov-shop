@@ -81,8 +81,10 @@ class Cars_to_products extends Model
         return $this->attributes['brand_name'].' '.$this->attributes['model_name'].' ('.$this->attributes['build_years'].')';
     }
     public function getProductUriAttribute(){
-        $package_id = explode('-',request()->route()->parameter("engine"))[0];
-        return '/'.$this->attributes['brand_name'].'-'.$this->attributes['model_name'].'-'.$this->translit($this->attributes['product_name']).'_'.$this->attributes['product_id'].'-'.$this->attributes['category_id'].'-'.$package_id;
+        $package_arr = explode('-',request()->route()->parameter("engine"));
+        $package_id = $package_arr[0];
+        $engine_id = isset($package_arr[1])?'-'.$package_arr[1]:'';
+        return '/'.$this->attributes['brand_name'].'-'.$this->attributes['model_name'].'-'.$this->translit($this->attributes['product_name']).'_'.$this->attributes['product_id'].'-'.$this->attributes['category_id'].'-'.$package_id.$engine_id;
     }
 
     public function getProductNameAttribute(){
